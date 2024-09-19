@@ -4,9 +4,10 @@ import { config } from 'dotenv'
 config();
 const app = express();
 const PORT =  Number(process.env.PORT);
+app.set('trust proxy', true);
 
 app.get('/',( request : Request, response : Response, next : NextFunction) =>{
-    response.json({message : request.socket.remoteAddress});
+    response.json({message : request.ip});
 });
 
 app.listen(PORT,'0.0.0.0', ()=>{
