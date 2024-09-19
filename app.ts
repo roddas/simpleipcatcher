@@ -7,7 +7,7 @@ const PORT =  Number(process.env.PORT);
 app.set('trust proxy', true);
 
 app.get('/',( request : Request, response : Response, next : NextFunction) =>{
-    response.json({message : request.ip});
+    response.send(request.ip);
 });
 
 app.listen(PORT,'0.0.0.0', ()=>{
