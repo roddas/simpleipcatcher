@@ -6,7 +6,7 @@ const app = express();
 const PORT =  Number(process.env.PORT);
 
 app.get('/',( request : Request, response : Response, next : NextFunction) =>{
-    response.json({message : request.ip});
+    response.json({message : request.socket.remoteAddress});
 });
 
 app.listen(PORT,'0.0.0.0', ()=>{
