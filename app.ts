@@ -1,24 +1,25 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { config } from 'dotenv'
+import { createProxyMiddleware, Filter, Options, RequestHandler } from 'http-proxy-middleware';
 
 config();
 const app = express();
-const PORT =  Number(process.env.PORT);
-app.set('trust proxy', true);
+const PORT = Number(process.env.PORT);
 
-let tmp : string | undefined = '';
+function createProxy(url: string) {
+    return createProxyMiddleware<Request, Response>({
+        target: url,
+        changeOrigin: true,
+    });
+}
 
-app.get('/checkpoint',( request : Request, response : Response, next : NextFunction) =>{
-    const {ip} = request;
-    tmp = ip;
-    response.send();
-});
+const redditProxy = createProxy('https://www.reddit.com');
+const linkedinProxy = createProxy('https://www.linkedin.com');
 
-app.get('/',( request : Request, response : Response, next : NextFunction) =>{
-    response.send(tmp);
-});
+app.use('/reddit', redditProxy);
+app.use('/linkedin', linkedinProxy);
 
-app.listen(PORT,'0.0.0.0', ()=>{
+
+app.listen(PORT, '0.0.0.0', () => {
     console.log(` The server is listening at ${PORT} .. `)
-} )
-
+});
